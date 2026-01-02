@@ -6,9 +6,11 @@ using BepInEx;
 using BepInEx.Configuration;
 using MiscFixes.Modules;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Permissions;
 using UnityEngine.Networking;
+using static Legacy::R2API.DirectorAPI;
 
 [assembly: AssemblyVersion(CreditModifier.version)]
 #pragma warning disable CS0618
@@ -23,8 +25,9 @@ public class CreditModifier : BaseUnityPlugin
 	public const string version = "1.0.0";
     private static Harmony instance = null;
 
-    static double m = 10;
-    static double b = 0;
+    static double scalar = 1;
+    static double flat = 0;
+    static bool scaleVault = false;
 
     public void Awake()
 	{
@@ -44,8 +47,9 @@ public class CreditModifier : BaseUnityPlugin
 
         string title = "Credit Modifier Controls";
 
-        CreditModifier.b = cfg.BindOptionSlider(title, "Flat", "Flat credit scalar", 0.5f).Value;
-        CreditModifier.m = cfg.BindOptionSlider(title, "Scalar", "Per-player credit scalar", 0.5f).Value;
+        CreditModifier.flat = cfg.BindOptionSlider(title, "Flat", "Flat credit boost", 0.5f).Value;
+        CreditModifier.scalar = cfg.BindOptionSlider(title, "Scalar", "Per-player credit scalar", 0.5f).Value;
+        CreditModifier.scaleVault = cfg.BindOption(title, "ScaleVault", "Whether the \"vault\" credits should be scaled", false).Value;
     }
 
     public static void Begin(Run thisRun)
@@ -80,14 +84,17 @@ public class CreditModifier : BaseUnityPlugin
         }
 
         double playerCount = Run.instance.participatingPlayerCount;
-        double initialCredits = __instance.interactableCredit;
+        double vaultCreditsToRemove = scaleVault ? 0 : ClassicStageInfo.instance?.bonusInteractibleCreditObjects?.Where(
+                obj => obj.objectThatGrantsPointsIfEnabled?.activeSelf is true
+            ).Sum(obj => obj.points) ?? 0;
+        double initialCredits = __instance.interactableCredit - vaultCreditsToRemove;
         double baseCredits = initialCredits / (0.5 * playerCount + 0.5);
-        double extraCredits = baseCredits * (m * playerCount + b) - initialCredits;
-        extraCredits = Math.Round(extraCredits, MidpointRounding.AwayFromZero);
+        double extraCreditsToAdd = baseCredits * (scalar * playerCount + flat) - initialCredits;
+        extraCreditsToAdd = Math.Round(extraCreditsToAdd, MidpointRounding.AwayFromZero);
 
-        __instance.interactableCredit += (int)extraCredits;
+        __instance.interactableCredit += (int)extraCreditsToAdd;
 
-        System.Console.WriteLine($"adjusted initial {initialCredits} credits by {extraCredits} to {__instance.interactableCredit}.");
+        System.Console.WriteLine($"adjusted initial {initialCredits} credits by {extraCreditsToAdd} to {__instance.interactableCredit}.");
         Run.instance.RecalculateDifficultyCoefficent();
     }
 }
