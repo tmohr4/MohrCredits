@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MultitudesDifficulty.Properties {
+namespace MohrCredits.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MultitudesDifficulty.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MultitudesDifficulty.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MohrCredits.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,26 +57,6 @@ namespace MultitudesDifficulty.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] eclipse {
-            get {
-                object obj = ResourceManager.GetObject("eclipse", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] icon {
-            get {
-                object obj = ResourceManager.GetObject("icon", resourceCulture);
-                return ((byte[])(obj));
             }
         }
     }
