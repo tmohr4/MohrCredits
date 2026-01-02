@@ -3,7 +3,7 @@
 This package allows you to easily configure the stage director credit scaling for multiplayer. By default, the per-player scaling and flat bonus are both `0.5` (when normalizing to a value of 1.0 for singleplayer). For example, here's a table of the stage director's credits when spawning in *Siphoned Forest* on stage 1:
 
 | Player Count | Credits | Normalized Value | Credits Per Person
-|
+| - | - | - | -
 | `1` | `300` | `1.0` | `300`
 | `2` | `450` | `1.5` | `225`
 | `3` | `600` | `2.0` | `200`
